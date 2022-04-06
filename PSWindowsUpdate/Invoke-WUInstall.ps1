@@ -43,7 +43,7 @@
 					ValueFromPipelineByPropertyName=$True)]
 		[String[]]$ComputerName,
 		[String]$TaskName = "PSWindowsUpdate",
-		[ScriptBlock]$Script = {ipmo PSWindowsUpdate; Get-WUInstall -AcceptAll | Out-File C:\PSWindowsUpdate.log},
+		[ScriptBlock]$Script = {Import-Module -Name PSWindowsUpdate; Get-WUInstall -MicrosoftUpdate -NotCategory "Drivers" | Out-File C:\PSWindowsUpdate.log},
 		[Switch]$OnlineUpdate
 	)
 

@@ -6,38 +6,38 @@ Function Get-WUInstall
 
 	.DESCRIPTION
 		Use Get-WUInstall to get list of available updates, next download and install it. 
-		There are two types of filtering update: Pre search criteria, Post search criteria.
-		- Pre search works on server side, like example: ( IsInstalled = 0 and IsHidden = 0 and CategoryIds contains '0fa1201d-4330-4fa8-8ae9-b877473b6441' )
+		There are two types of filtering update: pre-search criteria, Post search criteria.
+		- pre-search works on server side, like example: ( IsInstalled = 0 and IsHidden = 0 and CategoryIds contains '0fa1201d-4330-4fa8-8ae9-b877473b6441' )
 		- Post search work on client side after downloading the pre-filtered list of updates, like example $KBArticleID -match $Update.KBArticleIDs
 		
 		Update occurs in four stages: 1. Search for updates, 2. Choose updates, 3. Download updates, 4. Install updates.
 		
 	.PARAMETER Type
-		Pre search criteria. Finds updates of a specific type, such as 'Driver' and 'Software'. Default value contains all updates.
+		pre-search criteria. Finds updates of a specific type, such as 'Driver' and 'Software'. Default value contains all updates.
 
 	.PARAMETER UpdateID
-		Pre search criteria. Finds updates of a specific UUID (or sets of UUIDs), such as '12345678-9abc-def0-1234-56789abcdef0'.
+		pre-search criteria. Finds updates of a specific UUID (or sets of UUIDs), such as '12345678-9abc-def0-1234-56789abcdef0'.
 
 	.PARAMETER RevisionNumber
-		Pre search criteria. Finds updates of a specific RevisionNumber, such as '100'. This criterion must be combined with the UpdateID param.
+		pre-search criteria. Finds updates of a specific RevisionNumber, such as '100'. This criterion must be combined with the UpdateID param.
 
 	.PARAMETER CategoryIDs
-		Pre search criteria. Finds updates that belong to a specified category (or sets of UUIDs), such as '0fa1201d-4330-4fa8-8ae9-b877473b6441'.
+		pre-search criteria. Finds updates that belong to a specified category (or sets of UUIDs), such as '0fa1201d-4330-4fa8-8ae9-b877473b6441'.
 
 	.PARAMETER IsInstalled
-		Pre search criteria. Finds updates that are installed on the destination computer.
+		pre-search criteria. Finds updates that are installed on the destination computer.
 
 	.PARAMETER IsHidden
-		Pre search criteria. Finds updates that are marked as hidden on the destination computer. Default search criteria is only not hidden upadates.
+		pre-search criteria. Finds updates that are marked as hidden on the destination computer. Default search criteria is only not hidden upadates.
 	
 	.PARAMETER WithHidden
-		Pre search criteria. Finds updates that are both hidden and not on the destination computer. Overwrite IsHidden param. Default search criteria is only not hidden upadates.
+		pre-search criteria. Finds updates that are both hidden and not on the destination computer. Overwrite IsHidden param. Default search criteria is only not hidden upadates.
 		
 	.PARAMETER Criteria
-		Pre search criteria. Set own string that specifies the search criteria.
+		pre-search criteria. Set own string that specifies the search criteria.
 
 	.PARAMETER ShowSearchCriteria
-		Show choosen search criteria. Only works for pre search criteria.
+		Show choosen search criteria. Only works for pre-search criteria.
 		
 	.PARAMETER Category
 		Post search criteria. Finds updates that contain a specified category name (or sets of categories name), such as 'Updates', 'Security Updates', 'Critical Updates', etc...
@@ -90,7 +90,7 @@ Function Get-WUInstall
 	.PARAMETER AutoSelectOnly
 		Install only the updates that would appear as 'important' updates in the Windows Update GUI.
 		
-	.PARAMETER Debuger	
+	.PARAMETER Debugger	
 	    Debug mode.
 
 	.EXAMPLE
@@ -98,7 +98,7 @@ Function Get-WUInstall
 	
 		PS C:\> Get-WUInstall -MicrosoftUpdate -IgnoreUserInput -WhatIf -Verbose
 		VERBOSE: Connecting to Microsoft Update server. Please wait...
-		VERBOSE: Found [39] Updates in pre search criteria
+		VERBOSE: Found [39] Updates in pre-search criteria
 		VERBOSE: Found [5] Updates in post search criteria to Download
 		What if: Performing operation "Aktualizacja firmy Microsoft z ekranem wybierania przegl¹darki dla u¿ytkowników systemu W
 		indows 7 dla systemów opartych na procesorach x64 w Europejskim Obszarze Gospodarczym (KB976002)[1 MB]?" on Target "KOMP
@@ -183,7 +183,7 @@ Function Get-WUInstall
 	)]	
 	Param
 	(
-		#Pre search criteria
+		#pre-search criteria
 		[parameter(ValueFromPipelineByPropertyName=$true)]
 		[ValidateSet("Driver", "Software")]
 		[String]$Type="",
@@ -236,15 +236,15 @@ Function Get-WUInstall
 		[Switch]$AutoReboot,
 		[Switch]$IgnoreReboot,
 		[Switch]$AutoSelectOnly,
-		[Switch]$Debuger
+		[Switch]$Debugger
 	)
 
 	Begin
 	{
-		If($PSBoundParameters['Debuger'])
+		If($PSBoundParameters['Debugger'])
 		{
 			$DebugPreference = "Continue"
-		} #End If $PSBoundParameters['Debuger'] 
+		} #End If $PSBoundParameters['Debugger'] 
 	}
 
 	Process
@@ -372,23 +372,23 @@ Function Get-WUInstall
 				If($IsInstalled) 
 				{
 					$search = "IsInstalled = 1"
-					Write-Debug "Set pre search criteria: IsInstalled = 1"
+					Write-Debug "Set pre-search criteria: IsInstalled = 1"
 				} #End If $IsInstalled
 				Else
 				{
 					$search = "IsInstalled = 0"	
-					Write-Debug "Set pre search criteria: IsInstalled = 0"
+					Write-Debug "Set pre-search criteria: IsInstalled = 0"
 				} #End Else $IsInstalled
 				
 				If($Type -ne "")
 				{
-					Write-Debug "Set pre search criteria: Type = $Type"
+					Write-Debug "Set pre-search criteria: Type = $Type"
 					$search += " and Type = '$Type'"
 				} #End If $Type -ne ""					
 				
 				If($UpdateID)
 				{
-					Write-Debug "Set pre search criteria: UpdateID = '$([string]::join(", ", $UpdateID))'"
+					Write-Debug "Set pre-search criteria: UpdateID = '$([string]::join(", ", $UpdateID))'"
 					$tmp = $search
 					$search = ""
 					$LoopCount = 0
@@ -400,7 +400,7 @@ Function Get-WUInstall
 						} #End If $LoopCount -gt 0
 						If($RevisionNumber)
 						{
-							Write-Debug "Set pre search criteria: RevisionNumber = '$RevisionNumber'"	
+							Write-Debug "Set pre-search criteria: RevisionNumber = '$RevisionNumber'"	
 							$search += "($tmp and UpdateID = '$ID' and RevisionNumber = $RevisionNumber)"
 						} #End If $RevisionNumber
 						Else
@@ -413,7 +413,7 @@ Function Get-WUInstall
 
 				If($CategoryIDs)
 				{
-					Write-Debug "Set pre search criteria: CategoryIDs = '$([string]::join(", ", $CategoryIDs))'"
+					Write-Debug "Set pre-search criteria: CategoryIDs = '$([string]::join(", ", $CategoryIDs))'"
 					$tmp = $search
 					$search = ""
 					$LoopCount =0
@@ -430,23 +430,23 @@ Function Get-WUInstall
 				
 				If($IsHidden) 
 				{
-					Write-Debug "Set pre search criteria: IsHidden = 1"
+					Write-Debug "Set pre-search criteria: IsHidden = 1"
 					$search += " and IsHidden = 1"	
 				} #End If $IsNotHidden
 				ElseIf($WithHidden) 
 				{
-					Write-Debug "Set pre search criteria: IsHidden = 1 and IsHidden = 0 (clear IsHidden criteria)"
+					Write-Debug "Set pre-search criteria: IsHidden = 1 and IsHidden = 0 (clear IsHidden criteria)"
 				} #End ElseIf $WithHidden
 				Else
 				{
-					Write-Debug "Set pre search criteria: IsHidden = 0"
+					Write-Debug "Set pre-search criteria: IsHidden = 0"
 					$search += " and IsHidden = 0"	
 				} #End Else $WithHidden
 				
 				#Don't know why every update have RebootRequired=false which is not always true
 				If($IgnoreRebootRequired) 
 				{
-					Write-Debug "Set pre search criteria: RebootRequired = 0"
+					Write-Debug "Set pre-search criteria: RebootRequired = 0"
 					$search += " and RebootRequired = 0"	
 				} #End If $IgnoreRebootRequired
 			} #End Else $Criteria
@@ -479,11 +479,11 @@ Function Get-WUInstall
 		$UpdateCollection = @()
 		$UpdatesExtraDataCollection = @{}
 		$PreFoundUpdatesToDownload = $objResults.Updates.count
-		Write-Verbose "Found [$PreFoundUpdatesToDownload] Updates in pre search criteria"	
+		Write-Verbose "Found [$PreFoundUpdatesToDownload] Updates in pre-search criteria"	
 		
 		If($PreFoundUpdatesToDownload -eq 0)
 		{
-			Write-Warning "Don't found any Updates in pre search criteria"
+			Write-Warning "Don't found any Updates in pre-search criteria"
 			Return
 		} #End If $PreFoundUpdatesToDownload -eq 0
 		
